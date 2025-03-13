@@ -26,91 +26,63 @@ const AddTaskScreen = () => {
 
   const handleAddTask = () => {
     const newTask = { name, description, category, dueDate, reminderDate };
-    navigation.navigate("Home", { NovoOpravilo: newTask });
+    navigation.popTo("Home", { NovoOpravilo: newTask });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add a New Task</Text>
+      <Text style={styles.title}>Dodaj novo opravilo</Text>
 
-      {/* Name Input */}
       <TextInput
         style={styles.input}
-        placeholder="Task Name"
-        placeholderTextColor="#6c757d"
+        placeholder="Naziv"
+        placeholderTextColor="#777"
         value={name}
         onChangeText={setName}
       />
 
-      {/* Description Input */}
       <TextInput
         style={[styles.input, styles.textArea]}
-        placeholder="Task Description"
-        placeholderTextColor="#6c757d"
+        placeholder="Opis"
+        placeholderTextColor="#777"
         value={description}
         onChangeText={setDescription}
         multiline
-        numberOfLines={4}
       />
 
-      {/* Category Picker */}
       <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={category}
-          onValueChange={(itemValue) => setCategory(itemValue)}
-          style={styles.picker}
-        >
-          <Picker.Item label="Delo (Work)" value="Delo" />
-          <Picker.Item label="Hobiji (Hobbies)" value="Hobiji" />
-          <Picker.Item label="Nakupovanje (Shopping)" value="Nakupovanje" />
+        <Picker selectedValue={category} onValueChange={(itemValue) => setCategory(itemValue)} style={styles.picker}>
+          <Picker.Item label="Služba" value="Služba" />
+          <Picker.Item label="Hobiji" value="Hobiji" />
+          <Picker.Item label="Nakupovanje" value="Nakupovanje" />
+          <Picker.Item label="Dom" value="Dom" />
+          <Picker.Item label="Šola" value="Šola" />
+          <Picker.Item label="Zdravje" value="Zdravje" />
+          <Picker.Item label="Finance" value="Finance" />
+          <Picker.Item label="Družina" value="Družina" />
         </Picker>
       </View>
 
-      {/* Due Date Picker */}
-      <View style={styles.dateContainer}>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => setOpenDueDate(true)}
-        >
-          <Text style={styles.dateButtonText}>Select Due Date</Text>
-        </TouchableOpacity>
-        <Text style={styles.dateText}>📅 {dueDate.toDateString()}</Text>
-        <DatePicker
-          modal
-          open={openDueDate}
-          date={dueDate}
-          onConfirm={(date) => {
-            setOpenDueDate(false);
-            setDueDate(date);
-          }}
-          onCancel={() => setOpenDueDate(false)}
-        />
-      </View>
+      <TouchableOpacity style={styles.dateButton} onPress={() => setOpenDueDate(true)}>
+        <Text style={styles.dateButtonText}>📅 Datum zapadlosti</Text>
+      </TouchableOpacity>
+      <Text style={styles.dateText}>{dueDate.toDateString()}</Text>
+      <DatePicker modal open={openDueDate} date={dueDate} onConfirm={(date) => {
+        setOpenDueDate(false);
+        setDueDate(date);
+      }} onCancel={() => setOpenDueDate(false)} />
 
-      {/* Reminder Date Picker */}
-      <View style={styles.dateContainer}>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => setOpenReminderDate(true)}
-        >
-          <Text style={styles.dateButtonText}>Select Reminder Date</Text>
-        </TouchableOpacity>
-        <Text style={styles.dateText}>⏰ {reminderDate.toDateString()}</Text>
-        <DatePicker
-          modal
-          open={openReminderDate}
-          date={reminderDate}
-          onConfirm={(date) => {
-            setOpenReminderDate(false);
-            setReminderDate(date);
-          }}
-          onCancel={() => setOpenReminderDate(false)}
-        />
-      </View>
+      <TouchableOpacity style={styles.dateButton} onPress={() => setOpenReminderDate(true)}>
+        <Text style={styles.dateButtonText}>⏰ Datum opomnika</Text>
+      </TouchableOpacity>
+      <Text style={styles.dateText}>{reminderDate.toDateString()}</Text>
+      <DatePicker modal open={openReminderDate} date={reminderDate} onConfirm={(date) => {
+        setOpenReminderDate(false);
+        setReminderDate(date);
+      }} onCancel={() => setOpenReminderDate(false)} />
 
-      {/* Add Task Button */}
       <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
-        <Text style={styles.addButtonText}>Add Task</Text>
+        <Text style={styles.addButtonText}>Dodaj opravilo!</Text>
       </TouchableOpacity>
     </View>
   );
@@ -120,84 +92,65 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: "center",
-    color: "#333",
+    textAlign: 'center',
   },
   input: {
-    backgroundColor: "#fff",
-    borderColor: "#ced4da",
+    height: 40,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
+    borderRadius: 5,
     marginBottom: 15,
-    fontSize: 16,
-    color: "#333",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
   },
   textArea: {
     height: 100,
-    textAlignVertical: "top",
+    textAlignVertical: 'top',
   },
   pickerContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderColor: "#ced4da",
+    borderRadius: 5,
     marginBottom: 15,
-    paddingHorizontal: 10,
+    height: 60,
+    backgroundColor: '#fff',
   },
   picker: {
-    height: 50,
-    width: "100%",
-    color: "#495057",
-  },
-  dateContainer: {
-    marginBottom: 20,
-    alignItems: "center",
+    height: 60,
+    width: '100%',
   },
   dateButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 8,
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 5,
   },
   dateButtonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    fontWeight: "bold",
+    textAlign: 'center',
   },
   dateText: {
-    marginTop: 5,
+    marginBottom: 15,
     fontSize: 16,
-    color: "#6c757d",
+    color: '#333',
   },
   addButton: {
-    backgroundColor: "#28a745",
-    paddingVertical: 15,
-    borderRadius: 10,
+    backgroundColor: '#28a745',
+    padding: 15,
+    borderRadius: 5,
     marginTop: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
   },
   addButtonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 18,
-    fontWeight: "bold",
+    textAlign: 'center',
   },
 });
 

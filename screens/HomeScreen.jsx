@@ -17,10 +17,10 @@ const HomeScreen = () => {
     setTasks(updatedTasks);
   };
 
-  // ko se route.params.NovoOpravilo spremeni se doda nov task
+  // Ko se route.params.NovoOpravilo spremeni se doda nov task
   useEffect(() => {
     if (route.params?.NovoOpravilo) {
-      setTasks([...tasks, route.params.NovoOpravilo]);
+      setTasks((prevTasks) => [...prevTasks, route.params.NovoOpravilo]);
       navigation.setParams({ NovoOpravilo: null })
     }
   }, [route.params?.NovoOpravilo])
@@ -40,7 +40,7 @@ const HomeScreen = () => {
               <Text>{item.dueDate.toDateString()}</Text>
             </View>
             <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteTask(index)}>
-              <Text style={styles.deleteButtonText}>Delete</Text>
+              <Text style={styles.deleteButtonText}>Izbriši</Text>
             </TouchableOpacity>
           </TouchableOpacity>
         )}
@@ -62,8 +62,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    marginVertical: 8,  
+    backgroundColor: '#ffffff', 
+    borderRadius: 10,   
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4, 
   },
   taskContent: {
     flex: 1,

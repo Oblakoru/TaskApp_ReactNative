@@ -6,15 +6,15 @@ const DetailsScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Name:</Text>
+      <Text style={styles.label}>Naziv:</Text>
       <Text>{task.name}</Text>
-      <Text style={styles.label}>Description:</Text>
+      <Text style={styles.label}>Opis:</Text>
       <Text>{task.description}</Text>
-      <Text style={styles.label}>Category:</Text>
+      <Text style={styles.label}>Kategorija:</Text>
       <Text>{task.category}</Text>
-      <Text style={styles.label}>Due Date:</Text>
+      <Text style={styles.label}>Rok:</Text>
       <Text>{task.dueDate.toDateString()}</Text>
-      <Text style={styles.label}>Reminder Date:</Text>
+      <Text style={styles.label}>Datum opomnika:</Text>
       <Text>{task.reminderDate.toDateString()}</Text>
     </View>
   );
