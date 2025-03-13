@@ -5,5 +5,7 @@
     <application
         android:usesCleartextTraffic="true"
         tools:targetApi="28"
+        android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning"/>
+        
 </manifest>
