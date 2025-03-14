@@ -67,7 +67,7 @@ const AddTaskScreen = () => {
         <Text style={styles.dateButtonText}>📅 Datum zapadlosti</Text>
       </TouchableOpacity>
       <Text style={styles.dateText}>{dueDate.toDateString()}</Text>
-      <DatePicker modal open={openDueDate} date={dueDate} onConfirm={(date) => {
+      <DatePicker modal open={openDueDate} mode='date' date={dueDate} onConfirm={(date) => {
         setOpenDueDate(false);
         setDueDate(date);
       }} onCancel={() => setOpenDueDate(false)} />
@@ -76,7 +76,7 @@ const AddTaskScreen = () => {
         <Text style={styles.dateButtonText}>⏰ Datum opomnika</Text>
       </TouchableOpacity>
       <Text style={styles.dateText}>{reminderDate.toDateString()}</Text>
-      <DatePicker modal open={openReminderDate} date={reminderDate} onConfirm={(date) => {
+      <DatePicker modal open={openReminderDate} mode='date' date={reminderDate} onConfirm={(date) => {
         setOpenReminderDate(false);
         setReminderDate(date);
       }} onCancel={() => setOpenReminderDate(false)} />
