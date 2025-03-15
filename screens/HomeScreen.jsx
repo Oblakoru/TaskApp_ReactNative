@@ -37,10 +37,6 @@ const HomeScreen = () => {
     );
   };
 
-  /*  const handleDeleteTask = (index) => {
-     setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));
-   }; */
-
 
   const handleDeleteTask = (taskId) => {
     const user = auth().currentUser;
@@ -54,9 +50,6 @@ const HomeScreen = () => {
       .delete()
       .then(() => {
         console.log(`🗑️ Task ${taskId} deleted from Firestore`);
-
-        // Remove task from local state
-        setTasks((prevTasks) => prevTasks.filter(task => task.id !== taskId));
       })
       .catch(error => console.error("🔥 Error deleting task:", error));
   };
@@ -79,9 +72,6 @@ const HomeScreen = () => {
         .add(newTask)
         .then((docRef) => {
           console.log("✅ Task added with ID:", docRef.id);
-
-          // Dodam ID v nov task
-          setTasks((prevTasks) => [...prevTasks, { id: docRef.id, ...newTask }]);
         })
         .catch(error => console.error("🔥 Error adding task:", error));
 
@@ -89,8 +79,9 @@ const HomeScreen = () => {
     }
   }, [route.params?.NovoOpravilo]);
 
+
   useEffect(() => {
-    const user = auth().currentUser; // Get the current user
+    const user = auth().currentUser; 
 
     if (!user) return;
 
@@ -100,8 +91,14 @@ const HomeScreen = () => {
       .collection('users')
       .doc(user.uid)
       .collection('tasks')
-      .orderBy('createdAt', 'desc') // Get tasks in descending order
+      .orderBy('createdAt', 'desc') 
       .onSnapshot(snapshot => {
+
+        if (!snapshot || !snapshot.docs) {
+          console.error("🔥 Firestore snapshot is undefined or empty");
+          return;
+        }
+
         const fetchedTasks = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
@@ -110,7 +107,7 @@ const HomeScreen = () => {
         setTasks(fetchedTasks);
       });
 
-    return () => unsubscribe(); // Cleanup listener when unmounting
+    return () => unsubscribe(); 
   }, []);
 
   const renderRightActions = (progress, dragX, index) => {

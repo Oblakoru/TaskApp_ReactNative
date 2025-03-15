@@ -13,9 +13,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
-const LogoutButton = () => {
-  const navigation = useNavigation();
-
+const LogoutButton = ({ navigation }) => {
   const handleLogout = () => {
     Alert.alert(
       "Logout",
@@ -27,9 +25,9 @@ const LogoutButton = () => {
           onPress: async () => {
             try {
               await auth().signOut();
-              //navigation.replace("LoginScreen"); // Redirect to Login screen
+              navigation.replace("Login"); // Redirect to Login screen
             } catch (error) {
-              console.error("Logout Error:", error);
+              console.error("🔥 Logout Error:", error);
             }
           },
         },
@@ -44,18 +42,21 @@ const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login"  screenOptions={{
-        headerRight: () => <LogoutButton />,
-      }}>
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Domov' }} />
-          <Stack.Screen name="Details" component={DetailsScreen} options={{ title: 'Podrobnosti' }} />
-          <Stack.Screen name="AddTask" component={AddTaskScreen} options={{ title: 'Dodaj opravilo' }} />
-          <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Prijava' }} />
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={({ navigation }) => ({ 
+              title: "Domov", 
+              headerRight: () => <LogoutButton navigation={navigation} /> 
+            })}
+          />
+          <Stack.Screen name="Details" component={DetailsScreen} options={{ title: "Podrobnosti" }} />
+          <Stack.Screen name="AddTask" component={AddTaskScreen} options={{ title: "Dodaj opravilo" }} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Prijava" }} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
-
   );
 };
-
 export default App;

@@ -15,10 +15,18 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
 
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false);
+
+    if (user) {
+      navigation.replace('Home');
+    }
   }
 
 
@@ -26,7 +34,7 @@ const LoginScreen = () => {
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        navigation.navigate('Home');
+        navigation.replace('Home');
         console.log('User signed in successfully!');
       })
       .catch(error => {
@@ -51,10 +59,7 @@ const LoginScreen = () => {
       });
   }
 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
+
 
   if (initializing) return null;
 
@@ -70,12 +75,6 @@ const LoginScreen = () => {
         </View>
     );
   }
-  
-  return (
-    <View>
-      <Text>Welcome {user.email}</Text>
-    </View>
-  );
 }
 
 export default LoginScreen;
