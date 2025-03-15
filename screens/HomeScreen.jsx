@@ -1,37 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRef } from 'react';
 
 // Za swipeable
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Reanimated, {
-  SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-
 
 // Za firestore 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
+
+
 const HomeScreen = () => {
 
-  //const user = auth().currentUser;
+  const swipeableRefs = useRef({});
+  const navigation = useNavigation();
+  const route = useRoute();
 
   const [tasks, setTasks] = useState([]);
 
-  const navigation = useNavigation();
-
-  // Da se lahk prebere nov task iz AddTaskScreen
-  const route = useRoute();
 
   const confirmDeleteTask = (id) => {
     Alert.alert(
       "Potrditev brisanja",
       "Ali ste prepričani, da želite izbrisati to opravilo?",
       [
-        { text: "Prekliči", style: "cancel" },
+        { text: "Prekliči", style: "cancel", onPress: () => swipeableRefs.current[id]?.close()},
         { text: "Izbriši", onPress: () => handleDeleteTask(id), style: "destructive" }
       ]
     );
@@ -126,13 +124,17 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Seznam Opravil</Text>
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ReanimatedSwipeable
-            friction={2}
-            rightThreshold={40}
+            friction={1}
+            rightThreshold={20}
+            overshootRight={false}
+            overshootLeft={false}
+            ref={(ref) => (swipeableRefs.current[item.id] = ref)}
             renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item.id)}
             onSwipeableOpen={() => confirmDeleteTask(item.id)}
           >
@@ -160,7 +162,15 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#0A0A0A',
     padding: 20,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   taskItem: {
     flexDirection: 'row',
@@ -168,17 +178,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     marginVertical: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f5f5f5',
     borderRadius: 10,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  taskContent: {
-    flex: 1,
+  taskText: {
+    color: '#000', 
+    fontSize: 16,
   },
   button: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#fff",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -186,7 +195,7 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   buttonText: {
-    color: "#fff",
+    color: "#000",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -197,21 +206,24 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   rightAction: {
-    width: 80,
-    height: '100%',
-    backgroundColor: 'red',
+    width: "100%",
+    height: '80%',
+    backgroundColor: '#ff4444',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    borderRadius: 10,
   },
   rightActionText: {
     color: '#fff',
     fontSize: 16,
+    marginRight: 20,
     fontWeight: 'bold',
   },
-  separator: {
-    width: '100%',
-    borderTopWidth: 1,
+  taskText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
 
 export default HomeScreen;
+

@@ -8,7 +8,9 @@ import LoginScreen from './screens/LoginScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 import { Alert, Button } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import * as Icon from "react-native-feather";
 
 
 const Stack = createNativeStackNavigator();
@@ -25,7 +27,7 @@ const LogoutButton = ({ navigation }) => {
           onPress: async () => {
             try {
               await auth().signOut();
-              navigation.replace("Login"); // Redirect to Login screen
+              navigation.replace("Login");
             } catch (error) {
               console.error("🔥 Logout Error:", error);
             }
@@ -35,28 +37,38 @@ const LogoutButton = ({ navigation }) => {
     );
   };
 
-  return <Button title="Logout" onPress={handleLogout} />;
+  return (
+    <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
+      <Icon.LogOut size={24} color="#fff" />
+    </TouchableOpacity>
+  );
 };
 
 const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerStyle: { backgroundColor: '#000' }, 
+            headerTitle: "", 
+          }}
+        >
           <Stack.Screen
             name="Home"
             component={HomeScreen}
             options={({ navigation }) => ({ 
-              title: "Domov", 
               headerRight: () => <LogoutButton navigation={navigation} /> 
             })}
           />
-          <Stack.Screen name="Details" component={DetailsScreen} options={{ title: "Podrobnosti" }} />
-          <Stack.Screen name="AddTask" component={AddTaskScreen} options={{ title: "Dodaj opravilo" }} />
-          <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Prijava" }} />
+          <Stack.Screen name="Details" component={DetailsScreen} />
+          <Stack.Screen name="AddTask" component={AddTaskScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
   );
 };
+
 export default App;

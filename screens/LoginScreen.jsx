@@ -65,14 +65,27 @@ const LoginScreen = () => {
 
   if (!user) {
     return (
-        <View style={styles.container}>
-          <Text>Tukaj se lahko prijaviš</Text>
-          <TextInput placeholder="Email" value={email} onChangeText={setEmail} />
-          <TextInput placeholder="Geslo" value={password} onChangeText={setPassword} />
-          <TouchableOpacity onPress={() => loginUser()}>
-            <Text>Prijavi se</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>Prijava</Text>
+        <TextInput 
+          style={styles.input} 
+          placeholder="Email" 
+          placeholderTextColor="#888"
+          value={email} 
+          onChangeText={setEmail} 
+        />
+        <TextInput 
+          style={styles.input} 
+          placeholder="Geslo" 
+          placeholderTextColor="#888"
+          value={password} 
+          onChangeText={setPassword} 
+          secureTextEntry
+        />
+        <TouchableOpacity style={styles.button} onPress={loginUser}>
+          <Text style={styles.buttonText}>Prijavi se</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -83,9 +96,37 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
-  }
-
-})
+    padding: 20,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    width: '90%',
+    backgroundColor: '#222',
+    color: '#fff',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#444',
+  },
+  button: {
+    backgroundColor: '#fff',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
