@@ -13,9 +13,9 @@ const DetailsScreen = ({ route }) => {
       <Text style={styles.label}>Kategorija:</Text>
       <Text>{task.category}</Text>
       <Text style={styles.label}>Rok:</Text>
-      <Text>{task.dueDate.toDateString()}</Text>
+      <Text>{task.dueDate ? new Date(task.dueDate._seconds * 1000).toDateString() : "No Date"}</Text>
       <Text style={styles.label}>Datum opomnika:</Text>
-      <Text>{task.reminderDate.toDateString()}</Text>
+      <Text>{task.reminderDate ? new Date(task.reminderDate._seconds * 1000).toDateString() : "No Date"}</Text>
     </View>
   );
 };

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "690994524285",
+    "project_id": "tzva-checkmate",
+    "storage_bucket": "tzva-checkmate.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690994524285:android:e6ffc3694576fe7cbc8114",
+        "android_client_info": {
+          "package_name": "com.testresitve"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3SA3IzZ8uwl_1K1FIgv-IplS6DSCI7gc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
