@@ -53,6 +53,7 @@ const App = () => {
           screenOptions={{
             headerStyle: { backgroundColor: '#000' }, 
             headerTitle: "", 
+            headerTintColor: "#fff",
           }}
         >
           <Stack.Screen

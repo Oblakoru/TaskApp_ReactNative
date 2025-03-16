@@ -66,7 +66,7 @@ const LoginScreen = () => {
   if (!user) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Prijava</Text>
+        <Text style={styles.title}>CheckMate</Text>
         <TextInput 
           style={styles.input} 
           placeholder="Email" 
