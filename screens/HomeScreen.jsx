@@ -13,8 +13,6 @@ import Reanimated, {
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-
-
 const HomeScreen = () => {
 
   const swipeableRefs = useRef({});
@@ -52,11 +50,12 @@ const HomeScreen = () => {
       .catch(error => console.error("🔥 Error deleting task:", error));
   };
 
+
   // Za dodajanje
   useEffect(() => {
     const user = auth().currentUser;
+    
     if (route.params?.NovoOpravilo && user) {
-      console.log("🔥 Adding task to Firestore:", route.params.NovoOpravilo);
 
       const newTask = {
         ...route.params.NovoOpravilo,
@@ -83,8 +82,6 @@ const HomeScreen = () => {
 
     if (!user) return;
 
-    console.log("📡 Setting up real-time listener for tasks...");
-
     const unsubscribe = firestore()
       .collection('users')
       .doc(user.uid)
@@ -109,6 +106,8 @@ const HomeScreen = () => {
   }, []);
 
   const renderRightActions = (progress, dragX, index) => {
+    
+    // Ne uporabim, ker mam drugačen stil sam crasha, če ga ni tu 
     const animatedStyle = useAnimatedStyle(() => ({
       transform: [{ translateX: dragX.value }],
     }));

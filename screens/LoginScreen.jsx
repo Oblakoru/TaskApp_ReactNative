@@ -25,7 +25,7 @@ const LoginScreen = () => {
     if (initializing) setInitializing(false);
 
     if (user) {
-      navigation.replace('Home');
+      navigation.replace('MainTabs');
     }
   }
 
@@ -34,7 +34,7 @@ const LoginScreen = () => {
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        navigation.replace('Home');
+        navigation.replace('MainTabs');
         console.log('User signed in successfully!');
       })
       .catch(error => {
