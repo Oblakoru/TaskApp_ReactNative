@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput, Switch } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import * as Icon from "react-native-feather";
 import { MMKV } from 'react-native-mmkv';
+import {PermissionsAndroid} from 'react-native';
 
 export const storage = new MMKV();
 
-
+const MOTIVATION_TOPIC = 'motivational_messages';
 
 const AccountSettingsScreen = () => {
   const [user, setUser] = useState(null);
@@ -21,7 +23,19 @@ const AccountSettingsScreen = () => {
     if (currentUser?.displayName) {
       setDisplayName(currentUser.displayName);
     }
+
+    // Check initial subscription status when component mounts
+    checkTopicSubscription();
   }, []);
+
+  const checkTopicSubscription = async () => {
+    try {
+      const fcmToken = await messaging().getToken();
+      console.log('FCM Token:', fcmToken);
+    } catch (error) {
+      console.error('Error getting FCM token:', error);
+    }
+  };
 
   const handleUpdateProfile = async () => {
     try {
@@ -65,10 +79,36 @@ const AccountSettingsScreen = () => {
     storage.set("agreeTerms", newValue); // Save to MMKV
   };
 
-  const toggleMotivationMessages = () => {
+  const toggleMotivationMessages = async () => {
     const newValue = !motivationMessages;
-    setMotivationMessages(newValue);
-    storage.set("motivationMessages", newValue); // Save to MMKV
+    
+    try {
+      if (newValue) {
+
+
+        const permission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        if (!permission) {
+          const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+          if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+            Alert.alert("Dovoljenje zavrnjeno", "Za prejem motivacijskih sporočil morate omogočiti obvestila.");
+            return;
+          }
+        }
+
+        await messaging().subscribeToTopic(MOTIVATION_TOPIC);
+        Alert.alert('Naročeno', 'Naročeni ste na motivacijska sporočila.');
+      } else {
+        // Unsubscribe from topic
+        await messaging().unsubscribeFromTopic(MOTIVATION_TOPIC);
+        Alert.alert('Odjavljeno', 'Odjavljeni ste od motivacijskih sporočil.');
+      }
+
+      setMotivationMessages(newValue);
+      storage.set("motivationMessages", newValue);
+    } catch (error) {
+      console.error('Error toggling motivation messages:', error);
+      Alert.alert('Napaka', 'Prišlo je do napake pri spreminjanju nastavitev.');
+    }
   };
 
   if (!user) {

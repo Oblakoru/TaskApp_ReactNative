@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -11,6 +11,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 import { Alert, TouchableOpacity } from 'react-native';
 import * as Icon from "react-native-feather";
+import messaging from '@react-native-firebase/messaging';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -120,6 +121,19 @@ const MainNavigator = () => {
 };
 
 const App = () => {
+
+  useEffect(() => {
+    // Foreground Notification Handler
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
+    });
+
+    // Get Token for Debugging (Log It)
+    messaging().getToken().then(token => console.log('FCM Token:', token));
+
+    return unsubscribe; // Cleanup on unmount
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
