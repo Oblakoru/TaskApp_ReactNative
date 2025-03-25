@@ -27,7 +27,7 @@ const AddTaskScreen = () => {
   const handleAddTask = () => {
     const newTask = { name, description, category, dueDate, reminderDate };
     console.log("Zgodil sem se 🔥🔥🔥🔥🔥🔥")
-    navigation.navigate ("HomeScreen", { NovoOpravilo: newTask });
+    navigation.popTo ("HomeScreen", { NovoOpravilo: newTask });
   };
 
   return (

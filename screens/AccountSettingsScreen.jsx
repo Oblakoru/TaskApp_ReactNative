@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput, Switch } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import * as Icon from "react-native-feather";
+import { MMKV } from 'react-native-mmkv';
+
+export const storage = new MMKV();
+
+
 
 const AccountSettingsScreen = () => {
   const [user, setUser] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(storage.getBoolean("agreeTerms") || false);
+  const [motivationMessages, setMotivationMessages] = useState(storage.getBoolean("motivationMessages") || false);
 
   useEffect(() => {
     const currentUser = auth().currentUser;
     setUser(currentUser);
-    if (currentUser && currentUser.displayName) {
+    if (currentUser?.displayName) {
       setDisplayName(currentUser.displayName);
     }
   }, []);
@@ -49,6 +56,19 @@ const AccountSettingsScreen = () => {
         },
       ]
     );
+  };
+
+  // Handle agreement toggle
+  const toggleAgreement = () => {
+    const newValue = !agreeTerms;
+    setAgreeTerms(newValue);
+    storage.set("agreeTerms", newValue); // Save to MMKV
+  };
+
+  const toggleMotivationMessages = () => {
+    const newValue = !motivationMessages;
+    setMotivationMessages(newValue);
+    storage.set("motivationMessages", newValue); // Save to MMKV
   };
 
   if (!user) {
@@ -100,6 +120,18 @@ const AccountSettingsScreen = () => {
       <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
         <Text style={styles.buttonText}>Spremeni geslo</Text>
       </TouchableOpacity>
+
+      {/* Terms Agreement Toggle */}
+      <View style={styles.agreementContainer}>
+        <Text style={styles.label}>Strinjam se s pogoji</Text>
+        <Switch value={agreeTerms} onValueChange={toggleAgreement} />
+      </View>
+
+      <View style={styles.agreementContainer}>
+        <Text style={styles.label}>Motivacijska sporočila</Text>
+        <Switch value={motivationMessages} onValueChange={toggleMotivationMessages} />
+      </View>
+      
     </View>
   );
 };
@@ -129,7 +161,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   label: {
-    width: 80,
+    width: 150,
     fontWeight: 'bold',
   },
   value: {
@@ -156,6 +188,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  agreementContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 30,
+    justifyContent: "space-between"
+  }
 });
 
 export default AccountSettingsScreen;
