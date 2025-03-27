@@ -86,19 +86,27 @@ const AccountSettingsScreen = () => {
       if (newValue) {
 
 
-        const permission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-        if (!permission) {
+      /*   const permission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS); */
+       
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          Alert.alert("Dovoljenje zavrnjeno", "Za prejem motivacijskih sporočil morate omogočiti obvestila.");
+          return;
+        }
+        
+       /*  if (!permission) {
           const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
           if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
             Alert.alert("Dovoljenje zavrnjeno", "Za prejem motivacijskih sporočil morate omogočiti obvestila.");
             return;
           }
-        }
+        } */
 
-        await messaging().subscribeToTopic(MOTIVATION_TOPIC);
+        await messaging().subscribeToTopic(MOTIVATION_TOPIC).then(() => {
+          console.log('Subscribed to topic!');}
+        );
         Alert.alert('Naročeno', 'Naročeni ste na motivacijska sporočila.');
       } else {
-        // Unsubscribe from topic
         await messaging().unsubscribeFromTopic(MOTIVATION_TOPIC);
         Alert.alert('Odjavljeno', 'Odjavljeni ste od motivacijskih sporočil.');
       }

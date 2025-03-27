@@ -124,6 +124,8 @@ const App = () => {
 
   useEffect(() => {
     // Foreground Notification Handler
+
+    console.log("Zgodil sem se ")
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
     });
